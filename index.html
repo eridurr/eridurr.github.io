@@ -92,8 +92,9 @@ nav.scrolled{
 }
 .hero-content{
   position:relative;z-index:3;
-  padding:0 3.5rem 5rem;width:100%;
+  padding:0 3.5rem 0;width:100%;
   margin-top:auto;
+  margin-bottom:3rem;
   will-change:opacity,transform;
 }
 .hero-eyebrow{
@@ -579,7 +580,7 @@ window.addEventListener('scroll', () => {
   const heroContent = document.querySelector('.hero-content');
   const heroScroll = document.querySelector('.hero-scroll');
   const vh = window.innerHeight;
-  const progress = Math.min(window.scrollY / (vh * 0.4), 1);
+  const progress = Math.min(Math.max((window.scrollY - vh * 0.5) / (vh * 0.35), 0), 1);
   if(heroContent) {
     heroContent.style.opacity = 1 - progress;
     heroContent.style.transform = 'translateY(-' + (progress * 30) + 'px)';
