@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eri Dürr — Actor & Playwright</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#f0ece6;--white-dim:rgba(240,236,230,0.55);--white-faint:rgba(240,236,230,0.18);
+  --white-vfaint:rgba(240,236,230,0.08);
+  --black:#0a0908;
+  --accent:#c4a26a;--accent-dim:rgba(196,162,106,0.5);
+  --font-display:'Cormorant Garamond',serif;
+  --font-mono:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-display);-webkit-font-smoothing:antialiased}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 3rem;
+  transition:background 0.4s,border-color 0.4s;
+}
+nav.scrolled{
+  background:rgba(10,9,8,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--white-vfaint);
+}
+.nav-name{
+  font-family:var(--font-mono);font-size:0.62rem;
+  letter-spacing:0.24em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;opacity:0.9;
+}
+.nav-links{display:flex;gap:2.4rem;list-style:none}
+.nav-links a{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--white-dim);text-decoration:none;transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--white)}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;width:100%;height:100vh;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background-image:url('performance2.jpg');
+  background-size:cover;background-position:center 20%;
+  filter:brightness(0.72);
+}
+/* CSS film grain overlay */
+.hero-grain{
+  position:absolute;inset:0;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
+  background-size:256px 256px;
+  mix-blend-mode:overlay;opacity:0.55;pointer-events:none;
+}
+.hero-vignette{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(to top,rgba(10,9,8,0.85) 0%,rgba(10,9,8,0.2) 45%,transparent 70%);
+  pointer-events:none;
+}
+.hero-content{
+  position:relative;z-index:3;
+  padding:0 3rem 4rem;
+  width:100%;
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);font-size:0.6rem;
+  letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--accent-dim);margin-bottom:1rem;
+}
+.hero-title{
+  font-family:var(--font-display);font-size:clamp(3.5rem,7vw,7rem);
+  font-weight:300;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--white);
+}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-scroll{
+  position:absolute;right:3rem;bottom:4rem;z-index:3;
+  writing-mode:vertical-rl;
+  font-family:var(--font-mono);font-size:0.55rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--white-dim);display:flex;align-items:center;gap:1rem;
+}
+.hero-scroll::after{
+  content:'';width:1px;height:60px;
+  background:linear-gradient(to bottom,var(--white-dim),transparent);
+}
+
+/* ─── FULL-BLEED IMAGE SECTIONS ─── */
+.fullbleed{
+  width:100%;height:70vh;position:relative;overflow:hidden;
+}
+.fullbleed img{
+  width:100%;height:100%;object-fit:cover;
+  object-position:center 30%;
+  display:block;
+  filter:brightness(0.8);
+}
+.fullbleed-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
+  background-size:256px 256px;
+  mix-blend-mode:overlay;pointer-events:none;
+}
+.fullbleed-caption{
+  position:absolute;bottom:2rem;left:3rem;
+  font-family:var(--font-mono);font-size:0.55rem;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--white-dim);
+}
+
+/* ─── CONTENT BLOCKS ─── */
+.block{
+  max-width:960px;margin:0 auto;
+  padding:6rem 3rem;
+}
+.section-label{
+  font-family:var(--font-mono);font-size:0.58rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--accent-dim);margin-bottom:3rem;
+  display:flex;align-items:center;gap:1.5rem;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--white-vfaint)}
+
+/* ─── BEGIN HERE ─── */
+.bio-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.bio-text p{font-size:1rem;color:var(--white-dim);margin-bottom:1.1rem;line-height:1.85}
+.bio-text p em{font-style:italic;color:var(--white)}
+.detail-block{display:flex;flex-direction:column}
+.detail-item{padding:0.95rem 0;border-bottom:1px solid var(--white-vfaint)}
+.detail-item:first-child{border-top:1px solid var(--white-vfaint)}
+.detail-label{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-dim);margin-bottom:0.25rem}
+.detail-value{font-size:0.95rem;color:var(--white)}
+
+.training-section{margin-top:4.5rem}
+.training-item{
+  display:grid;grid-template-columns:1fr auto;gap:2rem;
+  align-items:baseline;padding:1.1rem 0;border-bottom:1px solid var(--white-vfaint);
+}
+.training-item:first-child{border-top:1px solid var(--white-vfaint)}
+.training-name{font-style:italic;font-size:1.1rem;font-weight:300;color:var(--white)}
+.training-sub{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.08em;color:var(--white-dim);margin-top:0.2rem}
+.training-place{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.07em;color:var(--accent-dim);white-space:nowrap}
+
+/* Gallery strip */
+.gallery-strip{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2px;margin-top:4.5rem;background:var(--white-vfaint);
+}
+.gal-item{
+  position:relative;overflow:hidden;cursor:pointer;
+  background:#111;
+}
+.gal-item:first-child{aspect-ratio:4/5}
+.gal-item:last-child{aspect-ratio:4/5}
+.gal-placeholder{
+  width:100%;height:100%;min-height:320px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0.7rem;color:rgba(240,236,230,0.15);
+}
+.gal-placeholder svg{width:26px;height:26px}
+.gal-placeholder span{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase}
+.gal-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s ease}
+.gal-item:hover img{transform:scale(1.03)}
+.gal-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,9,8,0.6) 0%,transparent 50%);
+  pointer-events:none;
+}
+.gal-cap{
+  position:absolute;bottom:1.2rem;left:1.5rem;
+  font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--white-dim);
+}
+
+/* ─── PERFORMANCE ─── */
+.credits-sub{
+  font-family:var(--font-mono);font-size:0.55rem;
+  letter-spacing:0.26em;text-transform:uppercase;
+  color:var(--white-dim);margin:0 0 1.2rem;
+}
+.credits-list{display:flex;flex-direction:column;margin-bottom:3rem}
+.credit-item{
+  display:grid;grid-template-columns:75px 1fr auto;
+  gap:2rem;align-items:baseline;
+  padding:1.2rem 0;border-bottom:1px solid var(--white-vfaint);
+}
+.credit-item:first-child{border-top:1px solid var(--white-vfaint)}
+.credit-year{font-family:var(--font-mono);font-size:0.62rem;color:var(--accent-dim)}
+.credit-role{font-style:italic;font-size:1.1rem;font-weight:300;color:var(--white)}
+.credit-prod{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;color:var(--white-dim);margin-top:0.18rem}
+.credit-venue{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.07em;color:var(--accent-dim);text-align:right;white-space:nowrap}
+
+/* ─── WRITING ─── */
+.plays-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--white-vfaint)}
+.play-card{background:var(--black);padding:2.5rem 2rem}
+.play-tag{font-family:var(--font-mono);font-size:0.53rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-dim);margin-bottom:1.2rem}
+.play-title{font-style:italic;font-size:1.5rem;font-weight:300;color:var(--white);margin-bottom:0.9rem;line-height:1.15}
+.play-desc{font-size:0.92rem;color:var(--white-dim);line-height:1.85}
+.play-status{
+  display:inline-block;margin-top:1.3rem;
+  font-family:var(--font-mono);font-size:0.53rem;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--accent);border-bottom:1px solid var(--accent-dim);padding-bottom:2px;
+}
+
+/* ─── IN PROGRESS ─── */
+.progress-item{
+  display:grid;grid-template-columns:1fr auto;gap:3rem;
+  align-items:start;padding:2rem 0;border-bottom:1px solid var(--white-vfaint);
+}
+.progress-item:first-child{border-top:1px solid var(--white-vfaint)}
+.prog-title{font-style:italic;font-size:1.15rem;font-weight:300;color:var(--white);margin-bottom:0.3rem}
+.prog-sub{font-family:var(--font-mono);font-size:0.57rem;letter-spacing:0.1em;color:var(--accent-dim);margin-bottom:0.8rem}
+.prog-desc{font-size:0.9rem;color:var(--white-dim);line-height:1.82;max-width:520px}
+.prog-badge{
+  font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.13em;
+  text-transform:uppercase;color:var(--white-dim);
+  border:1px solid var(--white-vfaint);padding:0.4rem 0.8rem;
+  white-space:nowrap;height:fit-content;
+}
+
+/* ─── CONTACT ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.contact-heading{
+  font-style:italic;font-size:clamp(2.8rem,5vw,4.5rem);
+  font-weight:300;line-height:1;margin-bottom:1.5rem;
+}
+.contact-heading em{font-style:normal;color:var(--accent)}
+.contact-sub{font-size:0.95rem;color:var(--white-dim);line-height:1.8}
+.contact-links{display:flex;flex-direction:column}
+.contact-link{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.2rem 0;border-bottom:1px solid var(--white-vfaint);
+  text-decoration:none;transition:opacity 0.2s;
+}
+.contact-link:first-child{border-top:1px solid var(--white-vfaint)}
+.contact-link:hover{opacity:0.7}
+.cl-label{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim)}
+.cl-val{font-style:italic;font-size:0.95rem;color:var(--accent)}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--white-vfaint);
+  padding:2.5rem 3rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-name{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--white-dim)}
+.footer-copy{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;color:rgba(240,236,230,0.25)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:680px){
+  nav{padding:1.1rem 1.4rem}.nav-links{gap:1.2rem}
+  .hero-content{padding:0 1.4rem 3rem}.hero-scroll{display:none}
+  .block{padding:4rem 1.4rem}
+  .bio-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem}
+  .credit-item{grid-template-columns:55px 1fr;gap:1rem}.credit-venue{display:none}
+  .plays-grid{grid-template-columns:1fr}
+  .progress-item{grid-template-columns:1fr}.prog-badge{display:none}
+  .gallery-strip{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:0.8rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-name">Eri Dürr</a>
+  <ul class="nav-links">
+    <li><a href="#begin">Begin Here</a></li>
+    <li><a href="#performance">Performance</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#progress">In Progress</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — full-bleed candlelit photo -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Actor &nbsp;·&nbsp; Playwright &nbsp;·&nbsp; Berlin</p>
+    <h1 class="hero-title"><em>Eri</em><br>Dürr</h1>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</div>
+
+<!-- BEGIN HERE -->
+<div id="begin" class="block">
+  <p class="section-label">Begin Here</p>
+
+  <div class="bio-grid">
+    <div class="bio-text">
+      <p>Eri Dürr is a Filipino-French actor and emerging playwright based in Berlin, working at the intersection of physical theatre, <em>animist cosmology</em>, and the liminal space between waking and dreaming.</p>
+      <p>Her practice is rooted in Meisner technique, developed through training with Angeli Bayani, Matthias Schott, and James Price. She holds a full-tuition scholarship to James Price's conservatory at The Acting Studio New York (2026).</p>
+      <p>Her stage credits include Ballhaus Naunynstraße, Berlin, and Miriam College Manila — including Fantine in <em>Les Misérables</em> and leads in works by Layeta Bucoy and Arielle Magno.</p>
+      <p>She is a member of the AFSAR acting community and is currently in inquiry with the Butoh collective 4rude Berlin.</p>
+    </div>
+    <div class="detail-block">
+      <div class="detail-item"><div class="detail-label">Based in</div><div class="detail-value">Berlin, Germany</div></div>
+      <div class="detail-item"><div class="detail-label">Nationality</div><div class="detail-value">Filipino · French</div></div>
+      <div class="detail-item"><div class="detail-label">Languages</div><div class="detail-value">English · Tagalog · German</div></div>
+      <div class="detail-item"><div class="detail-label">Practice</div><div class="detail-value">Meisner · Physical Theatre · Butoh</div></div>
+      <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">hi@eridurr.com</div></div>
+      <div class="detail-item"><div class="detail-label">Instagram</div><div class="detail-value">@eridurr_</div></div>
+    </div>
+  </div>
+
+  <!-- Training -->
+  <div class="training-section">
+    <p class="section-label">Training</p>
+    <div class="training-item">
+      <div><div class="training-name">Meisner Conservatory</div><div class="training-sub">James Price · Full-tuition scholarship</div></div>
+      <div class="training-place">The Acting Studio NY · 2026</div>
+    </div>
+    <div class="training-item">
+      <div><div class="training-name">Meisner Intensive</div><div class="training-sub">James Price</div></div>
+      <div class="training-place">Bühnenstudio Hamburg · 2026</div>
+    </div>
+    <div class="training-item">
+      <div><div class="training-name">Dramaturgy of Evil</div><div class="training-sub">Workshop — Steven Warwick</div></div>
+      <div class="training-place">Berlin</div>
+    </div>
+    <div class="training-item">
+      <div><div class="training-name">Meisner Training</div><div class="training-sub">Matthias Schott Acting Studio</div></div>
+      <div class="training-place">Berlin</div>
+    </div>
+    <div class="training-item">
+      <div><div class="training-name">Meisner Foundations</div><div class="training-sub">Angeli Bayani</div></div>
+      <div class="training-place">Meisner Studio Manila</div>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div style="margin-top:4.5rem">
+    <p class="section-label">Gallery</p>
+    <div class="gallery-strip">
+      <div class="gal-item">
+        <!-- Replace with: <img src="your-photo.jpg" alt="caption"> -->
+        <div class="gal-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Add photo</span>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Add photo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL-BLEED PERFORMANCE PHOTO -->
+<div class="fullbleed">
+  <img src="performance1.jpg" alt="Performance — Eri Dürr">
+  <div class="fullbleed-grain"></div>
+  <div class="fullbleed-caption">Performance documentation · Berlin</div>
+</div>
+
+<!-- PERFORMANCE -->
+<div id="performance" class="block">
+  <p class="section-label">Performance</p>
+
+  <p class="credits-sub">Theatre</p>
+  <div class="credits-list">
+    <div class="credit-item">
+      <span class="credit-year">2024–25</span>
+      <div><div class="credit-role">Ensemble</div><div class="credit-prod">The Melancholic Melody of the New Economy</div></div>
+      <span class="credit-venue">Ballhaus Naunynstraße, Berlin</span>
+    </div>
+    <div class="credit-item">
+      <span class="credit-year">Manila</span>
+      <div><div class="credit-role">Fantine</div><div class="credit-prod">Les Misérables</div></div>
+      <span class="credit-venue">Miriam College, Manila</span>
+    </div>
+    <div class="credit-item">
+      <span class="credit-year">Manila</span>
+      <div><div class="credit-role">Lead</div><div class="credit-prod">Works by Layeta Bucoy</div></div>
+      <span class="credit-venue">Miriam College, Manila</span>
+    </div>
+    <div class="credit-item">
+      <span class="credit-year">Manila</span>
+      <div><div class="credit-role">Lead</div><div class="credit-prod">Works by Arielle Magno</div></div>
+      <span class="credit-venue">Miriam College, Manila</span>
+    </div>
+  </div>
+
+  <p class="credits-sub" style="margin-top:1rem">Film & TV</p>
+  <div class="credits-list">
+    <div class="credit-item" style="grid-template-columns:75px 1fr">
+      <span class="credit-year"></span>
+      <div style="font-style:italic;font-size:0.9rem;color:rgba(240,236,230,0.3)">Credits coming soon.</div>
+    </div>
+  </div>
+</div>
+
+<!-- WRITING -->
+<div id="writing" class="block" style="padding-top:0">
+  <p class="section-label">Writing</p>
+  <div class="plays-grid">
+    <div class="play-card">
+      <div class="play-tag">Play in development</div>
+      <div class="play-title">The Middle Realm</div>
+      <div class="play-desc">A new play rooted in Filipino animist cosmology, exploring the liminal space between waking and dreaming — where the soul moves without the curtain of the body.</div>
+      <span class="play-status">In development</span>
+    </div>
+    <div class="play-card">
+      <div class="play-tag">Play in development</div>
+      <div class="play-title">Iloilo, 1940s</div>
+      <div class="play-desc">Set in Iloilo City and inspired by the life of Alicia Infortuna Barrera — taken as an infant by a wealthy shipping family, a woman who never knew her birth mother.</div>
+      <span class="play-status">In development</span>
+    </div>
+  </div>
+</div>
+
+<!-- IN PROGRESS -->
+<div id="progress" class="block" style="padding-top:0">
+  <p class="section-label">In Progress</p>
+  <div>
+    <div class="progress-item">
+      <div>
+        <div class="prog-title">Butoh Apprenticeship Inquiry</div>
+        <div class="prog-sub">4rude Berlin Collective</div>
+        <div class="prog-desc">An ongoing inquiry into Butoh as a somatic language — seeking apprenticeship with practitioners in Berlin following a formative encounter with Hikaru Inagawa.</div>
+      </div>
+      <div class="prog-badge">Awaiting response</div>
+    </div>
+    <div class="progress-item">
+      <div>
+        <div class="prog-title">The Acting Studio New York</div>
+        <div class="prog-sub">Six-week conservatory · James Price · Full-tuition scholarship</div>
+        <div class="prog-desc">A deep continuation of a Meisner practice begun in Manila and extended through Hamburg. October–November 2026.</div>
+      </div>
+      <div class="prog-badge">October 2026</div>
+    </div>
+    <div class="progress-item">
+      <div>
+        <div class="prog-title">Goethe-Institut Artistic Research Grant</div>
+        <div class="prog-sub">Artistic Research Abroad · Application in progress</div>
+        <div class="prog-desc">Grant narrative in development for research underpinning both plays — tracing Filipino animist cosmology and the oral histories of Iloilo.</div>
+      </div>
+      <div class="prog-badge">In development</div>
+    </div>
+    <div class="progress-item">
+      <div>
+        <div class="prog-title">ACC Individual Fellowship</div>
+        <div class="prog-sub">Asian Cultural Council · Applications open November 2026</div>
+        <div class="prog-desc">Identified as the strongest long-term funding match for the research itinerary, given Filipino citizenship and the scope of both plays.</div>
+      </div>
+      <div class="prog-badge">Nov 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="block" style="padding-top:0">
+  <p class="section-label">Contact</p>
+  <div class="contact-grid">
+    <div>
+      <h2 class="contact-heading">Get<br>in <em>touch</em></h2>
+      <p class="contact-sub">For casting, collaboration, representation, or press — reach out by email or Instagram. Based in Berlin, available internationally.</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:hi@eridurr.com" class="contact-link">
+        <span class="cl-label">Email</span><span class="cl-val">hi@eridurr.com</span>
+      </a>
+      <a href="https://instagram.com/eridurr_" target="_blank" class="contact-link">
+        <span class="cl-label">Instagram</span><span class="cl-val">@eridurr_</span>
+      </a>
+      <a href="https://eridurr.com" class="contact-link">
+        <span class="cl-label">Web</span><span class="cl-val">eridurr.com</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-name">Eri Dürr</span>
+  <span class="footer-copy">© 2026 · Berlin</span>
+</footer>
+
+<script>
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+</script>
+
+</body>
+</html>
